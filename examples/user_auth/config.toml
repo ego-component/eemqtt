@@ -1,0 +1,13 @@
+[emqtt]
+debug = true #启用框架自动调试日志
+brokers = ["tcp://127.0.0.1:1883"]
+username = "soe"
+password = "88951566"
+
+[emqtt.subscribeTopics.s1]
+topic = "topic1"
+qos = 1
+
+[emqtt.subscribeTopics.s2]
+topic = "topic2"
+qos = 1
