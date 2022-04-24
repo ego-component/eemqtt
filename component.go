@@ -143,11 +143,23 @@ func (c *Component) connServer() {
 	}
 
 	if c.config.EnableTLS {
-		tslConfig, errTLS := c.buildTLSConfig()
-		if errTLS != nil {
-			c.logger.Panic("build TLSConfig fialed", elog.FieldValueAny(c.config))
+		if c.config.customizeTlsConfig != nil {
+			cliCfg.TlsCfg = c.config.customizeTlsConfig
+		} else {
+			tslConfig, errTLS := c.buildTLSConfig()
+			if errTLS != nil {
+				c.logger.Panic("build TLSConfig fialed", elog.FieldValueAny(c.config))
+			}
+			cliCfg.TlsCfg = tslConfig
 		}
-		cliCfg.TlsCfg = tslConfig
+	}
+
+	if c.config.enableWillMessage {
+		cliCfg.SetWillMessage(c.config.willTopic, c.config.willPayload, c.config.willQos, c.config.willRetain)
+	}
+
+	if c.config.enableConnectPacket {
+		cliCfg.SetConnectPacketConfigurator(c.config.connectPacketBuilder)
 	}
 
 	cm, err := autopaho.NewConnection(c.ServerCtx, cliCfg)

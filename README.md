@@ -2,7 +2,7 @@
 [![goproxy.cn](https://goproxy.cn/stats/github.com/ego-component/eemqtt/badges/download-count.svg)](https://goproxy.cn/stats/github.com/ego-component/eemqtt)
 [![Release](https://img.shields.io/github/v/release/ego-component/eemqtt.svg?style=flat-square)](https://github.com/ego-component/eemqtt)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Example](https://img.shields.io/badge/Examples-2ca5e0?style=flat&logo=appveyor)](https://github.com/ego-component/eemqtt/examples/user_auth)
+[![Example](https://img.shields.io/badge/Examples-2ca5e0?style=flat&logo=appveyor)](https://github.com/ego-component/eemqtt/examples)
 [![Doc](https://img.shields.io/badge/Docs-1?style=flat&logo=appveyor)]()
 
 ## Table of contents
