@@ -22,6 +22,7 @@ func main() {
 	err := ego.New().Invoker(
 		initEQ,
 		pub,
+		usub,
 	).Run()
 	if err != nil {
 		elog.Error("startup", elog.Any("err", err))
@@ -30,6 +31,12 @@ func main() {
 	signal.Notify(sig, os.Interrupt)
 	signal.Notify(sig, syscall.SIGTERM)
 	<-sig
+}
+
+func usub() error {
+	time.Sleep(time.Second * 10)
+	emqClient.Unsubscribe([]string{"topic1"})
+	return nil
 }
 
 //初始化emqtt
@@ -71,7 +78,3 @@ func pub() error {
 func msgHandler(ctx context.Context, pp *paho.Publish) {
 	elog.Info("receive meg", elog.Any("topic", pp.Topic), elog.Any("msg", string(pp.Payload)))
 }
-
-//1.完善docker测试
-//2.编写收发代码
-//3.提交 pr

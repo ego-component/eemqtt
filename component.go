@@ -217,6 +217,39 @@ func (c *Component) Client() *autopaho.ConnectionManager {
 	return c.ec
 }
 
+func (c *Component) Unsubscribe(topics []string) {
+	c.rmu.RLock()
+	if c.mod == 0 {
+		c.rmu.RUnlock()
+		c.logger.Error("client not start")
+		return
+	}
+
+	_, err := c.ec.Unsubscribe(c.ServerCtx, &paho.Unsubscribe{
+		Topics: topics,
+	})
+	if err != nil {
+		c.logger.Error(fmt.Sprintf("Unsubscribe error: %s\n", err))
+	}
+}
+
+func (c *Component) Subscribe(topics []subscribeTopic) {
+	sOs := make(map[string]paho.SubscribeOptions)
+	for _, st := range topics {
+		sOs[st.Topic] = paho.SubscribeOptions{QoS: st.Qos}
+	}
+	var err error
+	if len(sOs) > 0 {
+		if _, err = c.ec.Subscribe(context.Background(), &paho.Subscribe{
+			Subscriptions: sOs,
+		}); err != nil {
+			c.logger.Error(fmt.Sprintf("failed to subscribe (%v). This is likely to mean no messages will be received.", sOs), elog.FieldErr(err))
+		}
+	} else {
+		c.logger.Error("subscribe error topics is empty")
+	}
+}
+
 func (c *Component) PublishMsg(topic string, qos byte, payload interface{}) {
 	c.rmu.RLock()
 	if c.mod == 0 {
