@@ -1,0 +1,19 @@
+[emqtt]
+debug = true #启用框架自动调试日志
+
+#通过官网服务进行测试 https://www.emqx.com/zh/mqtt/public-mqtt5-broker
+brokers = ["mqtts://broker-cn.emqx.io:8883"]
+
+#启用证书
+EnableTLS = true
+TLSClientCA = "./certs/broker.emqx.io-ca.crt"
+
+
+
+[emqtt.subscribeTopics.s1]
+topic = "topic1"
+qos = 1
+
+[emqtt.subscribeTopics.s2]
+topic = "topic2"
+qos = 1

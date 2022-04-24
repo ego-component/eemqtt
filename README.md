@@ -28,6 +28,9 @@
 
 使用样例可参考 [example](examples/user_auth/main.go)
 
+### 注意事项
+官网指定 mqtt SDK[paho.mqtt.golang](https://github.com/eclipse/paho.mqtt.golang) 本组件是另一个分支，支持 5.0协议，但并没有完全支持，作者准备自己完善   
+
 ## 使用说明
 通过连接到 emqtt[服务端](https://github.com/emqx/emqx) 实现发送主题消息 / 订阅主题消息
 
@@ -89,14 +92,44 @@ emqClient.PublishMsg("topic1", 0, bytes)
 
 
 ## 测试
+
+### 在线测试服务
+emqx 官网提供的测试服务[免费的在线 MQTT 5 服务器](https://www.emqx.com/zh/mqtt/public-mqtt5-broker)     
+请参考案例 [example](examples/tls_auth/main.go)   
+
+配置信息
+```toml
+[emqtt]
+debug = true #启用框架自动调试日志
+
+#通过官网服务进行测试 https://www.emqx.com/zh/mqtt/public-mqtt5-broker
+brokers = ["mqtts://broker-cn.emqx.io:8883"]
+
+#启用证书
+EnableTLS = true
+TLSClientCA = "./certs/broker.emqx.io-ca.crt"
+
+
+
+[emqtt.subscribeTopics.s1]
+topic = "topic1"
+qos = 1
+
+[emqtt.subscribeTopics.s2]
+topic = "topic2"
+qos = 1
+```
+
+
+### 自己搭建测试服务
 为了方便大家测试，这里提供了一个搭建容器测试环境的案例
 
-### 1. 安装redis 
+#### 1. 安装redis 
 requirepass 设置 redis 初始化访问密码 案例中设置为 root
 ```shell script
 docker run -d --name redis -p 6379:6379 redis:latest redis-server --requirepass "root"
 ```
-### 2. 安装 emqx 服务： 默认启用密码验证 redis 插件
+#### 2. 安装 emqx 服务： 默认启用密码验证 redis 插件
 EMQX_AUTH__REDIS__SERVER 是 redis的服务器和端口，填写宿主机真实IP   
 EMQX_AUTH__REDIS__PASSWORD redis 访问密码   
 EMQX_AUTH__REDIS__PASSWORD_HASH=plain 为了方便测试 密码配置成明文形式   
@@ -113,14 +146,14 @@ docker run -d --name emqx -p 18083:18083 -p 1883:1883 -p 4369:4369 -p 8083:8083 
     emqx/emqx:v4.0.0
 ```
 
-### 3. 设置emqx 访问密码
+#### 3. 设置emqx 访问密码
 连接上redis命令行，分别执行下面的两条语句设置用户名和密码。     
 用户名换成你的用户名，密码换成你的密码。      
 ```shell script   
   HSET mqtt_user:用户名 is_superuser 1
   HSET mqtt_user:用户名 password 密码
 ```
-### 4.go do it
+#### 4.go do it
 
 
 
